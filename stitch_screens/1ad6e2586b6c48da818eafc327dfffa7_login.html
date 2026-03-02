@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>로그인 - 생성형 AI 코치</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "kakao": "#FEE500",
+                        "naver": "#03C75A",
+                        "google": "#FFFFFF",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "Noto Sans KR", "sans-serif"],
+                        "sans": ["Noto Sans KR", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display overflow-x-hidden antialiased">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Background Image with Overlay -->
+<div class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat" data-alt="Badminton shuttlecock on court floor dramatic lighting" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDrF9q1ToYKjWGoOG_QUIxBkwJBeItQWKau3kjOcZGq_NQSGJtT1fIDvLNMzzMlPd-fPE5_LnuRhCiGXjInhZktCce4z6mkhqj0eNfc-gj3IBCF49me7B3p45JArMhwHhKm7zC9n4JRDLDUvIaMJH96gSndCrYsr24nPM2gjtDnVWLnUJi_Ke0pL06GV-Qnr8C83snKHeJIPpFl2A5UaG91kdnwiqW5QP84T_dYIpquiUj1fyV4VqJNn8c9asFSpUnq6Y-Gmw3aP88");'>
+<!-- Dark Gradient Overlay for readability -->
+<div class="absolute inset-0 bg-gradient-to-b from-background-dark/30 via-background-dark/60 to-background-dark/95"></div>
+</div>
+<!-- Content Container -->
+<div class="relative z-10 flex flex-1 flex-col justify-between p-6 @container">
+<!-- Top Section: Branding -->
+<div class="flex flex-1 flex-col items-center justify-center gap-6 pt-12">
+<div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/20 backdrop-blur-sm border border-primary/30 shadow-[0_0_15px_rgba(19,127,236,0.3)]">
+<span class="material-symbols-outlined text-4xl text-primary">sports_tennis</span>
+</div>
+<div class="flex flex-col gap-3 text-center">
+<h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] drop-shadow-lg">
+                        생성형 AI 코치
+                    </h1>
+<h2 class="text-slate-200 text-base font-normal leading-relaxed max-w-[280px] mx-auto opacity-90">
+                        당신의 배드민턴 폼을 AI로 분석하고<br/>실력을 향상시키세요.
+                    </h2>
+</div>
+</div>
+<!-- Bottom Section: Actions -->
+<div class="flex flex-col gap-3 pb-8 w-full max-w-[480px] mx-auto">
+<!-- Kakao Login Button -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-4 bg-[#FEE500] text-[#391B1B] hover:bg-[#ebd300] transition-colors shadow-lg active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-2xl">chat_bubble</span>
+<span class="text-base font-bold leading-normal">카카오로 시작하기</span>
+</div>
+</button>
+<!-- Naver Login Button -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-4 bg-[#03C75A] text-white hover:bg-[#02b150] transition-colors shadow-lg active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<span class="text-white font-black text-xl leading-none font-sans">N</span>
+<span class="text-base font-bold leading-normal">네이버로 시작하기</span>
+</div>
+</button>
+<!-- Google Login Button -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-4 bg-white text-slate-900 hover:bg-slate-100 transition-colors shadow-lg active:scale-[0.98]">
+<div class="flex items-center gap-3">
+<!-- Using a generic globe/circle icon as proxy for Google G logo in Material Symbols or pure CSS -->
+<span class="material-symbols-outlined text-2xl text-slate-800">language</span>
+<span class="text-base font-bold leading-normal">Google로 시작하기</span>
+</div>
+</button>
+<!-- Divider / Guest Link -->
+<div class="mt-4 flex flex-col items-center gap-4">
+<button class="text-slate-400 text-sm font-medium hover:text-white transition-colors underline underline-offset-4">
+                        게스트로 둘러보기
+                    </button>
+<div class="text-slate-500 text-xs text-center leading-relaxed px-4">
+                        계속 진행하면 
+                        <a class="underline hover:text-slate-300" href="#">이용약관</a> 및 
+                        <a class="underline hover:text-slate-300" href="#">개인정보 처리방침</a>에<br/>동의하게 됩니다.
+                    </div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

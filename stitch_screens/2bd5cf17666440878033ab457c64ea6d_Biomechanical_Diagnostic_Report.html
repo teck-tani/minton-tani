@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>홈 화면 대시보드</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-dark": "#1c2632",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-xl overflow-hidden">
+<div class="flex items-center px-4 py-3 justify-between sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-slate-200 dark:bg-surface-dark overflow-hidden border border-white/10">
+<img alt="User" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDflW4LvmblMK68Dg0avPZhM0fAAm_LbjuHdy1kuDa9SuhFWpp8voJnJ7fA6ngIlrfK_VeDbbGLVQwr_9tvb_V_5WDwYfKWBfkB72spAfOKKZwx-BKfOJdjcAyjX2slK41jncTXBfV2Q5hC_DAz4YK43mvjgb69k_fJaWYIFBqivBbJbn1SAAcpjGfozWb5Abd6z4G0B70HHQNqjY5uSpjAf9r3wLTqanjKOb_V9DoUveT7IKugRWERRc7qE6s-xWE6G_QcZf7yZDs"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400">환영합니다!</span>
+<span class="text-sm font-bold text-slate-900 dark:text-white">김민수 선수님</span>
+</div>
+</div>
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-surface-dark transition-colors relative">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border border-surface-dark"></span>
+</button>
+</div>
+<main class="flex-1 flex flex-col gap-6 px-4 pb-28 pt-2">
+<div class="grid grid-cols-2 gap-4">
+<div class="p-4 rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 shadow-sm relative overflow-hidden group">
+<div class="absolute -right-2 -top-2 size-16 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors"></div>
+<div class="flex flex-col gap-1 relative z-10">
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">주간 스매시</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">128</span>
+<span class="text-xs text-primary font-bold">+12%</span>
+</div>
+<span class="text-[10px] text-slate-400">지난주 대비 상승</span>
+</div>
+</div>
+<div class="p-4 rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 shadow-sm relative overflow-hidden group">
+<div class="absolute -right-2 -top-2 size-16 rounded-full bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors"></div>
+<div class="flex flex-col gap-1 relative z-10">
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">평균 파워</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">215</span>
+<span class="text-xs text-slate-500">km/h</span>
+</div>
+<span class="text-[10px] text-slate-400">엘리트급 파워</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">최근 분석</h3>
+<button class="text-xs text-primary font-medium hover:underline">더보기</button>
+</div>
+<div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-surface-dark shadow-lg ring-1 ring-white/10 group cursor-pointer">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBwZKHU1oItyQ7Ek1knKDY5cP7MDI3isi0v62EWH11lu5Ww3kd5vv0RrsuyIrvGh__aaFLZTuvrG0pzCquikFg02ZFpEvXsLL99nR6PmD2mLryJtYssnJsXnVMUgeencppE49Jy1BukGZ7o5YCcfKRoEpWQPUm2OJPgmjrSC7WKIG2BE80aSomNbzGcTLTClwuSYPuAbiG7K-gdtSy3m2mIS0ChgMdYf-AmE0LkJy1BX5uXz2u1oIwPOxAbD88uiF2EQK-t_9NoePI');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/90 via-transparent to-transparent"></div>
+<div class="absolute top-4 right-4 bg-surface-dark/80 backdrop-blur border border-white/10 rounded-lg px-3 py-1.5 flex flex-col items-center">
+<span class="text-[10px] text-slate-400 uppercase tracking-wide">Score</span>
+<span class="text-xl font-bold text-green-400">82<span class="text-xs text-slate-500 font-normal">/100</span></span>
+</div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-primary text-white">스매시</span>
+<span class="text-xs text-slate-300">2023.10.24 14:30</span>
+</div>
+<p class="text-sm font-medium text-white leading-snug">오버헤드 스윙 궤적 분석 완료</p>
+</div>
+<div class="size-8 rounded-full bg-white/10 backdrop-blur flex items-center justify-center border border-white/20 group-hover:bg-primary group-hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-white text-lg">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-5 rounded-2xl bg-gradient-to-br from-surface-dark to-surface-dark/50 border border-white/5 shadow-md">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">fitness_center</span>
+<h3 class="text-base font-bold text-slate-900 dark:text-white">훈련 로드맵</h3>
+</div>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-md">진행중</span>
+</div>
+<div class="flex flex-col gap-1 mb-2">
+<span class="text-xs text-slate-400 uppercase tracking-wider">현재 단계</span>
+<span class="text-xl font-bold text-white">Level 4: 파워 강화</span>
+</div>
+<div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden relative mb-2">
+<div class="absolute top-0 left-0 h-full bg-primary w-[65%] rounded-full"></div>
+</div>
+<div class="flex justify-between text-xs text-slate-400">
+<span>진행률 65%</span>
+<span>다음: 민첩성 훈련</span>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 shadow-sm">
+<div class="size-12 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-green-500 text-2xl">health_and_safety</span>
+</div>
+<div class="flex flex-col flex-1">
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400">부상 위험 모니터링</span>
+<div class="flex items-center gap-2">
+<span class="text-base font-bold text-slate-900 dark:text-white">무릎 안정성</span>
+<span class="px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-[10px] font-bold border border-green-500/20">좋음</span>
+</div>
+</div>
+<button class="text-slate-400 hover:text-white">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+<div class="fixed bottom-0 w-full max-w-md border-t border-slate-200 dark:border-white/10 bg-background-light/95 dark:bg-surface-dark/95 backdrop-blur-lg z-50">
+<div class="flex justify-between items-end px-2 pb-2 pt-2">
+<a class="flex flex-col items-center justify-center w-full py-1 gap-1 group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-[10px] font-medium text-primary">홈</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full py-1 gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-2xl">analytics</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">분석</span>
+</a>
+<div class="relative w-full flex justify-center group">
+<a class="absolute -top-8 flex flex-col items-center justify-center" href="#">
+<div class="size-14 rounded-full bg-slate-800 border-4 border-background-light dark:border-surface-dark flex items-center justify-center text-white cursor-pointer shadow-lg group-hover:scale-105 transition-transform group-hover:bg-primary group-hover:shadow-blue-500/40">
+<span class="material-symbols-outlined text-3xl">flip_camera_ios</span>
+</div>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary mt-1 transition-colors">미러</span>
+</a>
+</div>
+<a class="flex flex-col items-center justify-center w-full py-1 gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-2xl">fitness_center</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">훈련</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full py-1 gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-2xl">person</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">마이페이지</span>
+</a>
+</div>
+</div>
+</div>
+
+</body></html>

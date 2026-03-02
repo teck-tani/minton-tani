@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html class="dark" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>생체역학 진단 리포트</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "surface-dark": "#1c2632",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased overflow-x-hidden">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-xl overflow-hidden">
+<div class="flex items-center px-4 py-3 justify-between sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-surface-dark transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight flex-1 text-center">생체역학 진단 리포트</h2>
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-surface-dark transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">share</span>
+</button>
+</div>
+<main class="flex-1 flex flex-col gap-6 px-4 pb-28 pt-2">
+<div class="flex flex-col gap-2">
+<h1 class="text-2xl font-bold leading-tight">운동 사슬 분석</h1>
+<p class="text-sm text-slate-500 dark:text-slate-400">엘리트 선수 기준과 비교한 생체역학 효율성</p>
+</div>
+<div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-surface-dark shadow-lg ring-1 ring-white/10">
+<div class="absolute inset-0 bg-cover bg-center opacity-40" data-alt="Badminton player silhouette smashing shuttlecock" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBwZKHU1oItyQ7Ek1knKDY5cP7MDI3isi0v62EWH11lu5Ww3kd5vv0RrsuyIrvGh__aaFLZTuvrG0pzCquikFg02ZFpEvXsLL99nR6PmD2mLryJtYssnJsXnVMUgeencppE49Jy1BukGZ7o5YCcfKRoEpWQPUm2OJPgmjrSC7WKIG2BE80aSomNbzGcTLTClwuSYPuAbiG7K-gdtSy3m2mIS0ChgMdYf-AmE0LkJy1BX5uXz2u1oIwPOxAbD88uiF2EQK-t_9NoePI');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark to-transparent"></div>
+<div class="absolute inset-0 flex flex-col items-center justify-center p-4">
+<div class="flex items-center justify-between w-full h-full relative">
+<div class="absolute left-[20%] top-[60%] flex flex-col items-center">
+<div class="w-12 h-12 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center backdrop-blur-sm z-10">
+<span class="material-symbols-outlined text-green-500 text-xl">accessibility_new</span>
+</div>
+<span class="text-[10px] font-bold mt-1 text-green-400 uppercase tracking-wider">코어</span>
+</div>
+<div class="absolute left-[30%] top-[50%] w-[80px] h-1 bg-gradient-to-r from-green-500 to-green-500 rotate-[-25deg] origin-left opacity-70"></div>
+<div class="absolute left-[45%] top-[35%] flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-green-500/20 border-2 border-green-500 flex items-center justify-center backdrop-blur-sm z-10">
+<span class="material-symbols-outlined text-green-500 text-lg">settings_accessibility</span>
+</div>
+<span class="text-[10px] font-bold mt-1 text-green-400 uppercase tracking-wider">어깨</span>
+</div>
+<div class="absolute left-[55%] top-[35%] w-[60px] h-1 bg-gradient-to-r from-green-500 to-red-500 rotate-[10deg] origin-left opacity-70"></div>
+<div class="absolute right-[25%] top-[40%] flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-red-500/20 border-2 border-red-500 flex items-center justify-center backdrop-blur-sm animate-pulse z-10">
+<span class="material-symbols-outlined text-red-500 text-lg">error</span>
+</div>
+<span class="text-[10px] font-bold mt-1 text-red-400 uppercase tracking-wider">팔꿈치</span>
+</div>
+</div>
+<div class="absolute bottom-4 left-4 right-4 bg-surface-dark/90 backdrop-blur border border-white/5 p-3 rounded-lg flex items-center gap-3">
+<span class="material-symbols-outlined text-red-500 flex-shrink-0">warning</span>
+<p class="text-xs text-slate-200 leading-snug">
+<span class="font-bold text-red-400">에너지 손실 구간:</span> 팔꿈치가 너무 일찍 펴져 파워가 18% 감소합니다.
+                    </p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 shadow-sm">
+<div class="flex items-center gap-2 mb-1">
+<div class="p-1.5 rounded-md bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-lg">sports_tennis</span>
+</div>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">셔틀콕 속도</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold text-slate-900 dark:text-slate-100">234</span>
+<span class="text-xs font-medium text-slate-500">km/h</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden mt-1 relative">
+<div class="absolute top-0 left-0 h-full bg-primary w-[65%]"></div>
+<div class="absolute top-0 left-[98%] w-0.5 h-full bg-green-400 scale-y-150"></div>
+</div>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+<span>나</span>
+<span class="text-green-400">엘리트 360</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 shadow-sm">
+<div class="flex items-center gap-2 mb-1">
+<div class="p-1.5 rounded-md bg-orange-500/10 text-orange-500">
+<span class="material-symbols-outlined text-lg">height</span>
+</div>
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">타점 높이</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-2xl font-bold text-slate-900 dark:text-slate-100">2.65</span>
+<span class="text-xs font-medium text-slate-500">m</span>
+</div>
+<div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden mt-1 relative">
+<div class="absolute top-0 left-0 h-full bg-orange-500 w-[91%]"></div>
+<div class="absolute top-0 left-[95%] w-0.5 h-full bg-green-400 scale-y-150"></div>
+</div>
+<div class="flex justify-between text-[10px] text-slate-400 mt-1">
+<span>나</span>
+<span class="text-green-400">엘리트 2.90</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col p-4 rounded-xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">bolt</span>
+<h3 class="text-base font-bold text-slate-900 dark:text-slate-100">에너지 전달 효율성</h3>
+</div>
+<span class="px-2 py-1 rounded bg-red-500/10 text-red-500 text-xs font-bold border border-red-500/20">교정 필요</span>
+</div>
+<div class="flex items-end h-32 gap-3 pb-2 border-b border-slate-200 dark:border-slate-700 relative">
+<div class="flex-1 flex flex-col gap-1 items-center group">
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/30 rounded-t-sm h-[80%] relative overflow-hidden transition-all hover:opacity-80">
+<div class="absolute bottom-0 w-full bg-primary h-[95%] rounded-t-sm"></div>
+</div>
+<span class="text-[10px] text-slate-500">지면 반력</span>
+</div>
+<div class="flex-1 flex flex-col gap-1 items-center group">
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/30 rounded-t-sm h-[90%] relative overflow-hidden transition-all hover:opacity-80">
+<div class="absolute bottom-0 w-full bg-primary h-[88%] rounded-t-sm"></div>
+</div>
+<span class="text-[10px] text-slate-500">몸통 회전</span>
+</div>
+<div class="flex-1 flex flex-col gap-1 items-center group">
+<div class="w-full bg-red-500/20 rounded-t-sm h-[60%] relative overflow-hidden transition-all hover:opacity-80">
+<div class="absolute bottom-0 w-full bg-red-500 h-[50%] rounded-t-sm animate-pulse"></div>
+</div>
+<span class="text-[10px] text-red-400 font-bold whitespace-nowrap">에너지 손실</span>
+</div>
+<div class="flex-1 flex flex-col gap-1 items-center group">
+<div class="w-full bg-blue-500/20 dark:bg-blue-500/30 rounded-t-sm h-[40%] relative overflow-hidden transition-all hover:opacity-80">
+<div class="absolute bottom-0 w-full bg-slate-400 h-[60%] rounded-t-sm"></div>
+</div>
+<span class="text-[10px] text-slate-500">라켓 스피드</span>
+</div>
+<div class="absolute top-[10%] left-0 right-0 border-t border-dashed border-green-500/50 flex justify-end">
+<span class="text-[9px] text-green-500 bg-background-light dark:bg-surface-dark px-1 -mt-2.5">엘리트</span>
+</div>
+</div>
+</div>
+<div class="mt-2 p-4 rounded-xl bg-gradient-to-br from-primary/20 to-transparent border border-primary/20 flex flex-col gap-3">
+<div class="flex items-start gap-3">
+<div class="size-10 rounded-full bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white">play_arrow</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-slate-900 dark:text-white">추천 훈련 드릴</h4>
+<p class="text-xs text-slate-500 dark:text-slate-300 mt-0.5">"오버헤드 지연 스냅" 훈련으로 팔꿈치 타이밍을 교정하세요.</p>
+</div>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-primary text-white text-sm font-semibold shadow-lg hover:bg-blue-600 transition-colors">훈련 시작</button>
+</div>
+</main>
+<div class="fixed bottom-0 w-full max-w-md border-t border-slate-200 dark:border-white/10 bg-background-light/95 dark:bg-surface-dark/95 backdrop-blur-lg z-50">
+<div class="flex justify-between items-end px-2 pb-2">
+<a class="flex flex-col items-center justify-center w-full py-2 gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-2xl">home</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">홈</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full py-2 gap-1 group" href="#">
+<span class="material-symbols-outlined text-primary text-2xl">analytics</span>
+<span class="text-[10px] font-medium text-primary">분석</span>
+</a>
+<div class="relative w-full flex justify-center">
+<a class="absolute -top-6 flex flex-col items-center justify-center" href="#">
+<div class="size-14 rounded-full bg-primary shadow-lg shadow-blue-500/40 flex items-center justify-center text-white cursor-pointer hover:scale-105 transition-transform border-4 border-background-light dark:border-surface-dark">
+<span class="material-symbols-outlined text-3xl">flip_camera_ios</span>
+</div>
+<span class="text-[10px] font-medium text-primary mt-1">미러</span>
+</a>
+</div>
+<a class="flex flex-col items-center justify-center w-full py-2 gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-2xl">fitness_center</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">훈련</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full py-2 gap-1 group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors text-2xl">person</span>
+<span class="text-[10px] font-medium text-slate-400 group-hover:text-primary transition-colors">마이페이지</span>
+</a>
+</div>
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,29 @@
+{
+    "project_info": {
+        "project_number": "120519944306",
+        "project_id": "minton-smash-cv-app",
+        "storage_bucket": "minton-smash-cv-app.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:120519944306:android:b66b41cd78640a870cbaeb",
+                "android_client_info": {
+                    "package_name": "com.dckwon.minton_smash"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyClmumtobWi9BVJgz5smHqTJfpZ0UN-HRw"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
