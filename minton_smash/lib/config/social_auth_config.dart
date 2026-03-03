@@ -9,5 +9,5 @@ class SocialAuthConfig {
   static const String naverClientName = 'Minton Smash';
 
   // Backend URL (Cloud Run)
-  static const String backendBaseUrl = 'http://10.0.2.2:8000'; // Android emulator localhost
+  static const String backendBaseUrl = 'https://minton-smash-cv-120519944306.asia-northeast3.run.app';
 }

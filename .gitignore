@@ -2,3 +2,7 @@
 .mcp.json
 .playwright-mcp/
 firebase-debug.log
+
+# Firebase service account keys (never commit!)
+backend/service-account-key.json
+**/service-account-key*.json

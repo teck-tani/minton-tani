@@ -6,6 +6,8 @@ import 'theme.dart';
 import 'screens/injury_prevention_screen.dart';
 import 'screens/camera_mirror_screen.dart';
 import 'screens/biomechanics_report_screen.dart';
+import 'screens/training_screen.dart';
+import 'screens/my_page_screen.dart';
 import 'screens/login_screen.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'providers/auth_provider.dart';
@@ -103,8 +105,8 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
       const BiomechanicsReportScreen(),
       const InjuryPreventionScreen(),
       CameraMirrorScreen(cameras: cameras),
-      const Center(child: Text('훈련')),
-      const Center(child: Text('마이페이지')),
+      const TrainingScreen(),
+      const MyPageScreen(),
     ];
 
     return Scaffold(
