@@ -41,8 +41,12 @@ dependencies:
   google_mlkit_pose_detection: ^0.14.0
   permission_handler: ^12.0.1
   firebase_core: ^4.4.0
+  firebase_auth: ^6.1.4
   firebase_storage: ^13.0.6
   cloud_firestore: ^6.1.2
+  google_sign_in: ^6.3.0
+  kakao_flutter_sdk_user: ^1.9.7
+  flutter_naver_login: ^2.1.1
   http: ^1.6.0
 
 dev_dependencies:

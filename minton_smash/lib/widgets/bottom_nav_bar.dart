@@ -18,15 +18,16 @@ class BottomNavBar extends StatelessWidget {
     Color primaryColor = AppTheme.primaryColor;
     Color inactiveColor = isDark ? Colors.grey[500]! : Colors.grey[500]!;
 
-    return 
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    return
       Container(
-        height: 70,
+        height: 70 + bottomPadding,
         decoration: BoxDecoration(
           color: isDark ? AppTheme.backgroundDark.withOpacity(0.9) : Colors.white.withOpacity(0.9),
           border: Border(top: BorderSide(color: isDark ? Colors.grey[800]! : Colors.grey[200]!)),
         ),
-        child: SafeArea(
-          child: Row(
+        padding: EdgeInsets.only(bottom: bottomPadding),
+        child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildItem(icon: Symbols.home, label: '홈', index: 0, isActive: currentIndex == 0, color: inactiveColor, activeColor: primaryColor),
@@ -87,7 +88,6 @@ class BottomNavBar extends StatelessWidget {
               _buildItem(icon: Symbols.person, label: '마이페이지', index: 4, isActive: currentIndex == 4, color: inactiveColor, activeColor: primaryColor),
             ],
           ),
-        ),
       );
   }
 

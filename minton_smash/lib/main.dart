@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'theme.dart';
 import 'screens/injury_prevention_screen.dart';
 import 'screens/camera_mirror_screen.dart';
 import 'screens/biomechanics_report_screen.dart';
+import 'screens/login_screen.dart';
 import 'widgets/bottom_nav_bar.dart';
+import 'providers/auth_provider.dart';
+import 'config/social_auth_config.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+// Camera list as a Riverpod provider
+final camerasProvider = Provider<List<CameraDescription>>((ref) => []);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Kakao SDK
+  KakaoSdk.init(nativeAppKey: SocialAuthConfig.kakaoNativeAppKey);
 
   try {
     await Firebase.initializeApp(
@@ -20,7 +30,7 @@ Future<void> main() async {
   } catch (e) {
     debugPrint('Error initializing Firebase: $e');
   }
-  
+
   List<CameraDescription> cameras = [];
   try {
     cameras = await availableCameras();
@@ -30,15 +40,16 @@ Future<void> main() async {
 
   runApp(
     ProviderScope(
-      child: MintonSmashApp(cameras: cameras),
+      overrides: [
+        camerasProvider.overrideWithValue(cameras),
+      ],
+      child: const MintonSmashApp(),
     ),
   );
 }
 
 class MintonSmashApp extends StatelessWidget {
-  final List<CameraDescription> cameras;
-  
-  const MintonSmashApp({super.key, required this.cameras});
+  const MintonSmashApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,30 +58,51 @@ class MintonSmashApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      home: MainLayoutScreen(cameras: cameras),
+      home: const AuthGate(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MainLayoutScreen extends StatefulWidget {
-  final List<CameraDescription> cameras;
-  
-  const MainLayoutScreen({super.key, required this.cameras});
+/// Routes to LoginScreen or MainLayoutScreen based on auth state
+class AuthGate extends ConsumerWidget {
+  const AuthGate({super.key});
 
   @override
-  State<MainLayoutScreen> createState() => _MainLayoutScreenState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+
+    switch (authState.status) {
+      case AuthStatus.unknown:
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      case AuthStatus.unauthenticated:
+        return const LoginScreen();
+      case AuthStatus.authenticated:
+        return const MainLayoutScreen();
+    }
+  }
 }
 
-class _MainLayoutScreenState extends State<MainLayoutScreen> {
-  int _currentIndex = 0; // Default to 'Home' (the Diagnostic Report Dashboard)
+class MainLayoutScreen extends ConsumerStatefulWidget {
+  const MainLayoutScreen({super.key});
+
+  @override
+  ConsumerState<MainLayoutScreen> createState() => _MainLayoutScreenState();
+}
+
+class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final cameras = ref.watch(camerasProvider);
+
     final List<Widget> screens = [
       const BiomechanicsReportScreen(),
       const InjuryPreventionScreen(),
-      CameraMirrorScreen(cameras: widget.cameras), // The actual Realtime Mirror Screen
+      CameraMirrorScreen(cameras: cameras),
       const Center(child: Text('훈련')),
       const Center(child: Text('마이페이지')),
     ];
