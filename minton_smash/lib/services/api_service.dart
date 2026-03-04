@@ -69,11 +69,12 @@ class ApiService {
             if (conversationId != null) 'conversation_id': conversationId,
           }),
         )
-        .timeout(const Duration(seconds: 30));
+        .timeout(const Duration(seconds: 60));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body) as Map<String, dynamic>;
     } else {
+      debugPrint('AI Coach error: ${response.statusCode} - ${response.body}');
       throw Exception('AI Coach 요청 실패: ${response.statusCode}');
     }
   }

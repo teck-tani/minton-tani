@@ -350,42 +350,52 @@ async def ai_coach_chat(request: CoachChatRequest):
         raise HTTPException(status_code=503, detail="AI 코치 서비스가 준비되지 않았습니다.")
 
     # 1. Fetch user's recent completed analyses (last 5)
-    analyses_docs = (
-        db.collection("analyses")
-        .where("userId", "==", request.user_id)
-        .where("status", "==", "completed")
-        .order_by("createdAt", direction=firestore.Query.DESCENDING)
-        .limit(5)
-        .stream()
-    )
     user_analyses = []
-    for doc in analyses_docs:
-        data = doc.to_dict()
-        user_analyses.append({
-            "result": data.get("result", {}),
-            "coaching": data.get("coaching", {}),
-            "createdAt": data.get("createdAt", ""),
-        })
+    try:
+        analyses_docs = (
+            db.collection("analyses")
+            .where("userId", "==", request.user_id)
+            .where("status", "==", "completed")
+            .order_by("createdAt", direction=firestore.Query.DESCENDING)
+            .limit(5)
+            .stream()
+        )
+        for doc in analyses_docs:
+            data = doc.to_dict()
+            user_analyses.append({
+                "result": data.get("result", {}),
+                "coaching": data.get("coaching", {}),
+                "createdAt": data.get("createdAt", ""),
+            })
+    except Exception as e:
+        print(f"Firestore analyses query error: {e}")
 
     # 2. Fetch user stats
-    user_doc = db.collection("users").document(request.user_id).get()
-    user_stats = user_doc.to_dict().get("stats", {}) if user_doc.exists else {}
+    user_stats = {}
+    try:
+        user_doc = db.collection("users").document(request.user_id).get()
+        user_stats = user_doc.to_dict().get("stats", {}) if user_doc.exists else {}
+    except Exception as e:
+        print(f"Firestore user stats query error: {e}")
 
     # 3. Fetch recent injury alerts
     injury_alerts = []
-    for doc in (
-        db.collection("injuryAlerts")
-        .where("userId", "==", request.user_id)
-        .order_by("createdAt", direction=firestore.Query.DESCENDING)
-        .limit(3)
-        .stream()
-    ):
-        alert = doc.to_dict()
-        injury_alerts.append({
-            "bodyPart": alert.get("bodyPart", ""),
-            "riskLevel": alert.get("riskLevel", ""),
-            "description": alert.get("description", ""),
-        })
+    try:
+        for doc in (
+            db.collection("injuryAlerts")
+            .where("userId", "==", request.user_id)
+            .order_by("createdAt", direction=firestore.Query.DESCENDING)
+            .limit(3)
+            .stream()
+        ):
+            alert = doc.to_dict()
+            injury_alerts.append({
+                "bodyPart": alert.get("bodyPart", ""),
+                "riskLevel": alert.get("riskLevel", ""),
+                "description": alert.get("description", ""),
+            })
+    except Exception as e:
+        print(f"Firestore injury alerts query error: {e}")
 
     # 4. Build prompt with user context
     prompt = f"""당신은 "민턴 스매시"라는 배드민턴 코칭 앱의 AI 코치입니다.
