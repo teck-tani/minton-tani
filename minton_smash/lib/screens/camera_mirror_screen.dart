@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:camera/camera.dart';
 import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import '../widgets/pose_painter.dart';
 import '../services/api_service.dart';
 
@@ -28,6 +30,7 @@ class _CameraMirrorScreenState extends State<CameraMirrorScreen> {
   bool _isRecording = false;
   int _recordingSeconds = 0;
   Map<String, double> _jointAngles = {};
+  Timer? _recordingTimer;
 
   @override
   void initState() {
@@ -150,12 +153,51 @@ class _CameraMirrorScreenState extends State<CameraMirrorScreen> {
     }
   }
 
+  Future<void> _pickVideoFromGallery() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickVideo(source: ImageSource.gallery);
+    if (picked == null || !mounted) return;
+
+    final shouldUpload = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('영상 분석'),
+        content: Text('선택한 영상을 AI로 분석하시겠습니까?\n${picked.name}'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('취소')),
+          ElevatedButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('분석하기')),
+        ],
+      ),
+    );
+
+    if (shouldUpload == true) {
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid != null) {
+        final apiService = ApiService();
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('영상 업로드 중...')),
+          );
+        }
+        final result = await apiService.uploadAndAnalyzeVideo(File(picked.path), uid);
+        if (mounted) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(result != null ? '영상 업로드 완료! 분석이 시작되었습니다.' : '업로드 실패. 다시 시도해주세요.')),
+          );
+        }
+      }
+    }
+  }
+
   void _startRecordingTimer() {
-    Future.doWhile(() async {
-      await Future.delayed(const Duration(seconds: 1));
-      if (!_isRecording || !mounted) return false;
+    _recordingTimer?.cancel();
+    _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!_isRecording || !mounted) {
+        timer.cancel();
+        return;
+      }
       setState(() => _recordingSeconds++);
-      return true;
     });
   }
 
@@ -207,6 +249,7 @@ class _CameraMirrorScreenState extends State<CameraMirrorScreen> {
 
   @override
   void dispose() {
+    _recordingTimer?.cancel();
     // Restore all orientations when leaving camera screen
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _cameraController?.dispose();
@@ -356,8 +399,26 @@ class _CameraMirrorScreenState extends State<CameraMirrorScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      // Gallery button
+                      GestureDetector(
+                        onTap: _isRecording ? null : _pickVideoFromGallery,
+                        child: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: _isRecording ? Colors.white24 : Colors.white.withOpacity(0.2),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Symbols.photo_library,
+                            color: _isRecording ? Colors.white38 : Colors.white,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                      // Record button
                       GestureDetector(
                         onTap: _toggleRecording,
                         child: Container(
@@ -381,6 +442,8 @@ class _CameraMirrorScreenState extends State<CameraMirrorScreen> {
                           ),
                         ),
                       ),
+                      // Placeholder for symmetry
+                      const SizedBox(width: 44, height: 44),
                     ],
                   ),
                 ),

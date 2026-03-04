@@ -3,12 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'theme.dart';
-import 'screens/injury_prevention_screen.dart';
-import 'screens/camera_mirror_screen.dart';
+import 'screens/ai_coach_screen.dart';
+import 'screens/analysis_main_screen.dart';
 import 'screens/biomechanics_report_screen.dart';
 import 'screens/training_screen.dart';
-import 'screens/my_page_screen.dart';
+import 'screens/ranking_screen.dart';
 import 'screens/login_screen.dart';
+import 'widgets/app_drawer.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'providers/auth_provider.dart';
 import 'config/social_auth_config.dart';
@@ -96,20 +97,27 @@ class MainLayoutScreen extends ConsumerStatefulWidget {
 
 class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
   int _currentIndex = 0;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final cameras = ref.watch(camerasProvider);
 
     final List<Widget> screens = [
-      const BiomechanicsReportScreen(),
-      const InjuryPreventionScreen(),
-      CameraMirrorScreen(cameras: cameras),
+      BiomechanicsReportScreen(onOpenDrawer: () => _scaffoldKey.currentState?.openDrawer()),
       const TrainingScreen(),
-      const MyPageScreen(),
+      AnalysisMainScreen(cameras: cameras),
+      AICoachScreen(
+        onNavigateToCamera: () {
+          setState(() { _currentIndex = 2; });
+        },
+      ),
+      const RankingScreen(),
     ];
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: const AppDrawer(),
       body: IndexedStack(
         index: _currentIndex,
         children: screens,

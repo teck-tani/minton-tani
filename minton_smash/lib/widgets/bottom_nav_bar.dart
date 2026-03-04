@@ -31,9 +31,9 @@ class BottomNavBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildItem(icon: Symbols.home, label: '홈', index: 0, isActive: currentIndex == 0, color: inactiveColor, activeColor: primaryColor),
-              _buildItem(icon: Symbols.analytics, label: '분석', index: 1, isActive: currentIndex == 1, color: inactiveColor, activeColor: primaryColor),
-              
-              // Middle elevated 'Mirror' button
+              _buildItem(icon: Symbols.fitness_center, label: '훈련', index: 1, isActive: currentIndex == 1, color: inactiveColor, activeColor: primaryColor),
+
+              // Middle elevated 'Analysis' button
               GestureDetector(
                 onTap: () => onTap(2),
                 child: SizedBox(
@@ -64,12 +64,12 @@ class BottomNavBar extends StatelessWidget {
                                 ],
                               ),
                               child: Center(
-                                child: Icon(Symbols.monitor_heart, color: Colors.white, size: 28),
+                                child: Icon(Symbols.videocam, color: Colors.white, size: 28),
                               ),
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              '미러',
+                              '분석',
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -84,8 +84,8 @@ class BottomNavBar extends StatelessWidget {
                 ),
               ),
 
-              _buildItem(icon: Symbols.sports_tennis, label: '훈련', index: 3, isActive: currentIndex == 3, color: inactiveColor, activeColor: primaryColor),
-              _buildItem(icon: Symbols.person, label: '마이페이지', index: 4, isActive: currentIndex == 4, color: inactiveColor, activeColor: primaryColor),
+              _buildItem(icon: Symbols.smart_toy, label: 'AI코치', index: 3, isActive: currentIndex == 3, color: inactiveColor, activeColor: primaryColor),
+              _buildItem(icon: Symbols.leaderboard, label: '랭킹', index: 4, isActive: currentIndex == 4, color: inactiveColor, activeColor: primaryColor),
             ],
           ),
       );
