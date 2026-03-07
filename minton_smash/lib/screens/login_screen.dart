@@ -119,30 +119,6 @@ class LoginScreen extends ConsumerWidget {
                   const Spacer(flex: 2),
 
                   // --- Login Buttons ---
-                  // Kakao
-                  _SocialLoginButton(
-                    onPressed: authState.isLoading
-                        ? null
-                        : () => ref.read(authProvider.notifier).signInWithKakao(),
-                    backgroundColor: const Color(0xFFFEE500),
-                    textColor: const Color(0xFF191919),
-                    icon: _kakaoIcon(),
-                    label: '카카오로 시작하기',
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Naver
-                  _SocialLoginButton(
-                    onPressed: authState.isLoading
-                        ? null
-                        : () => ref.read(authProvider.notifier).signInWithNaver(),
-                    backgroundColor: const Color(0xFF03C75A),
-                    textColor: Colors.white,
-                    icon: _naverIcon(),
-                    label: '네이버로 시작하기',
-                  ),
-                  const SizedBox(height: 12),
-
                   // Google
                   _SocialLoginButton(
                     onPressed: authState.isLoading
@@ -152,6 +128,18 @@ class LoginScreen extends ConsumerWidget {
                     textColor: const Color(0xFF191919),
                     icon: _googleIcon(),
                     label: 'Google로 시작하기',
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Apple
+                  _SocialLoginButton(
+                    onPressed: authState.isLoading
+                        ? null
+                        : () => ref.read(authProvider.notifier).signInWithApple(),
+                    backgroundColor: const Color(0xFF000000),
+                    textColor: Colors.white,
+                    icon: _appleIcon(),
+                    label: 'Apple로 시작하기',
                   ),
                   const SizedBox(height: 20),
 
@@ -205,25 +193,6 @@ class LoginScreen extends ConsumerWidget {
   }
 
   // --- SNS Icon Widgets ---
-  static Widget _kakaoIcon() {
-    return SizedBox(
-      width: 20,
-      height: 20,
-      child: CustomPaint(painter: _KakaoLogoPainter()),
-    );
-  }
-
-  static Widget _naverIcon() {
-    return const Text(
-      'N',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 18,
-        fontWeight: FontWeight.w900,
-      ),
-    );
-  }
-
   static Widget _googleIcon() {
     return const Text(
       'G',
@@ -233,6 +202,10 @@ class LoginScreen extends ConsumerWidget {
         fontWeight: FontWeight.w700,
       ),
     );
+  }
+
+  static Widget _appleIcon() {
+    return const Icon(Icons.apple, color: Colors.white, size: 20);
   }
 }
 
@@ -284,31 +257,4 @@ class _SocialLoginButton extends StatelessWidget {
       ),
     );
   }
-}
-
-// Kakao speech-bubble logo painted with CustomPaint
-class _KakaoLogoPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF191919)
-      ..style = PaintingStyle.fill;
-
-    final path = Path();
-    final w = size.width;
-    final h = size.height;
-
-    // Simplified Kakao talk bubble shape
-    path.addOval(Rect.fromLTWH(w * 0.1, h * 0.1, w * 0.8, h * 0.6));
-    // Tail
-    path.moveTo(w * 0.3, h * 0.65);
-    path.lineTo(w * 0.2, h * 0.85);
-    path.lineTo(w * 0.45, h * 0.7);
-    path.close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

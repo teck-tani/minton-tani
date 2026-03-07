@@ -29,18 +29,21 @@ class RAGAIPipeline:
             self.gemini_client = genai.Client(
                 vertexai=True,
                 project=project,
-                location='asia-northeast3',
+                location='us-central1',
             )
         else:
             self.gemini_client = genai.Client()
 
-    def _upload_video(self, video_path: str):
+    def _upload_video(self, video_path: str, max_wait_seconds: int = 300):
         """Upload video to Gemini Files API and wait for processing."""
         print(f"[Gemini] Uploading video: {video_path}")
         video_file = self.gemini_client.files.upload(file=video_path)
 
-        # Wait for the video to be processed
+        # Wait for the video to be processed (with timeout)
+        start = time.time()
         while video_file.state == "PROCESSING":
+            if time.time() - start > max_wait_seconds:
+                raise RuntimeError(f"Video processing timed out after {max_wait_seconds}s")
             print("[Gemini] Video processing...")
             time.sleep(3)
             video_file = self.gemini_client.files.get(name=video_file.name)

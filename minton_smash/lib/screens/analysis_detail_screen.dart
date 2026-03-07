@@ -21,9 +21,14 @@ class _AnalysisDetailScreenState extends State<AnalysisDetailScreen> {
   @override
   void initState() {
     super.initState();
+    // Try annotated video first, fall back to original uploaded video
     final annotatedUrl = widget.analysis['annotatedVideoUrl'] as String?;
-    if (annotatedUrl != null && annotatedUrl.isNotEmpty) {
-      _initializeVideo(annotatedUrl);
+    final originalUrl = widget.analysis['videoUrl'] as String?;
+    final videoUrl = (annotatedUrl != null && annotatedUrl.isNotEmpty)
+        ? annotatedUrl
+        : originalUrl;
+    if (videoUrl != null && videoUrl.isNotEmpty) {
+      _initializeVideo(videoUrl);
     }
   }
 
@@ -70,6 +75,9 @@ class _AnalysisDetailScreenState extends State<AnalysisDetailScreen> {
     final createdAt = widget.analysis['createdAt'] as String? ?? '';
     final score = (result['overallScore'] ?? 0).toDouble();
     final annotatedUrl = widget.analysis['annotatedVideoUrl'] as String?;
+    final originalUrl = widget.analysis['videoUrl'] as String?;
+    final hasAnnotated = annotatedUrl != null && annotatedUrl.isNotEmpty;
+    final videoUrl = hasAnnotated ? annotatedUrl : originalUrl;
 
     return Scaffold(
       appBar: AppBar(
@@ -82,7 +90,7 @@ class _AnalysisDetailScreenState extends State<AnalysisDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Video Player Section
-            _buildVideoSection(isDark, annotatedUrl),
+            _buildVideoSection(isDark, videoUrl, hasAnnotated),
             const SizedBox(height: 20),
 
             // Date
@@ -223,20 +231,38 @@ class _AnalysisDetailScreenState extends State<AnalysisDetailScreen> {
     );
   }
 
-  Widget _buildVideoSection(bool isDark, String? annotatedUrl) {
+  Widget _buildVideoSection(bool isDark, String? videoUrl, bool isAnnotated) {
     // Video player ready
     if (_chewieController != null) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: AspectRatio(
-          aspectRatio: _videoController!.value.aspectRatio,
-          child: Chewie(controller: _chewieController!),
-        ),
+      return Column(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: AspectRatio(
+              aspectRatio: _videoController!.value.aspectRatio,
+              child: Chewie(controller: _chewieController!),
+            ),
+          ),
+          if (!isAnnotated)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Row(
+                children: [
+                  Icon(Symbols.info, size: 14, color: Colors.grey[500]),
+                  const SizedBox(width: 4),
+                  Text(
+                    '원본 영상 (포즈 분석 영상은 서버에서 처리 중)',
+                    style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                  ),
+                ],
+              ),
+            ),
+        ],
       );
     }
 
     // Video loading
-    if (annotatedUrl != null && annotatedUrl.isNotEmpty && !_videoError) {
+    if (videoUrl != null && videoUrl.isNotEmpty && !_videoError) {
       return AspectRatio(
         aspectRatio: 16 / 9,
         child: Container(
@@ -249,7 +275,7 @@ class _AnalysisDetailScreenState extends State<AnalysisDetailScreen> {
       );
     }
 
-    // No annotated video
+    // No video at all
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: Container(
@@ -263,7 +289,7 @@ class _AnalysisDetailScreenState extends State<AnalysisDetailScreen> {
             Icon(Symbols.videocam_off, color: Colors.grey[500], size: 48),
             const SizedBox(height: 8),
             Text(
-              _videoError ? '영상을 불러올 수 없습니다' : '포즈 분석 영상 없음',
+              _videoError ? '영상을 불러올 수 없습니다' : '영상 없음',
               style: TextStyle(color: Colors.grey[500], fontSize: 13),
             ),
           ],

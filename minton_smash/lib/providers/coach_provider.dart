@@ -117,8 +117,9 @@ final coachInsightsProvider = Provider<CoachInsights>((ref) {
 
       // Score trend from analyses list
       String? trend;
-      analysesAsync.whenData((analyses) {
-        final completed = analyses
+      final analysesList = analysesAsync.valueOrNull;
+      if (analysesList != null) {
+        final completed = analysesList
             .where((a) => a['status'] == 'completed')
             .take(5)
             .toList();
@@ -137,7 +138,7 @@ final coachInsightsProvider = Provider<CoachInsights>((ref) {
             trend = '최근 ${completed.length}회 분석 기준 점수 유지 중';
           }
         }
-      });
+      }
 
       return CoachInsights(
         hasData: true,

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/auth_service.dart';
@@ -34,19 +35,26 @@ class AuthState {
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthService _authService;
+  StreamSubscription<User?>? _authSub;
 
   AuthNotifier(this._authService) : super(const AuthState()) {
     _listenAuthChanges();
   }
 
   void _listenAuthChanges() {
-    _authService.authStateChanges.listen((user) {
+    _authSub = _authService.authStateChanges.listen((user) {
       if (user != null) {
         state = AuthState(status: AuthStatus.authenticated, user: user);
       } else {
         state = const AuthState(status: AuthStatus.unauthenticated);
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _authSub?.cancel();
+    super.dispose();
   }
 
   Future<void> signInWithGoogle() async {
@@ -58,19 +66,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> signInWithKakao() async {
+  Future<void> signInWithApple() async {
     state = state.copyWith(isLoading: true, error: null);
     try {
-      await _authService.signInWithKakao();
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
-  }
-
-  Future<void> signInWithNaver() async {
-    state = state.copyWith(isLoading: true, error: null);
-    try {
-      await _authService.signInWithNaver();
+      await _authService.signInWithApple();
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }

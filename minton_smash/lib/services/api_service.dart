@@ -40,7 +40,7 @@ class ApiService {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         debugPrint("CV Pipeline triggered successfully.");
         return downloadUrl;
       } else {
@@ -59,23 +59,28 @@ class ApiService {
     required String message,
     String? conversationId,
   }) async {
-    final response = await http
-        .post(
-          Uri.parse(coachApiUrl),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'user_id': userId,
-            'message': message,
-            if (conversationId != null) 'conversation_id': conversationId,
-          }),
-        )
-        .timeout(const Duration(seconds: 60));
+    try {
+      final response = await http
+          .post(
+            Uri.parse(coachApiUrl),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'user_id': userId,
+              'message': message,
+              if (conversationId != null) 'conversation_id': conversationId,
+            }),
+          )
+          .timeout(const Duration(seconds: 60));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body) as Map<String, dynamic>;
-    } else {
-      debugPrint('AI Coach error: ${response.statusCode} - ${response.body}');
-      throw Exception('AI Coach 요청 실패: ${response.statusCode}');
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        debugPrint('AI Coach error: ${response.statusCode} - ${response.body}');
+        throw Exception('AI Coach 요청 실패: ${response.statusCode}');
+      }
+    } on Exception catch (e) {
+      debugPrint('AI Coach request failed: $e');
+      rethrow;
     }
   }
 }

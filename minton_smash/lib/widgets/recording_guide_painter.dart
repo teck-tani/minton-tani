@@ -1,232 +1,221 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-/// Custom painter that draws a badminton player silhouette with phone position guides.
-/// Shows correct (front/side) and incorrect (diagonal) recording angles.
+/// Custom painter that draws a side-view badminton smash pose as recording guide.
+/// Based on actual smash motion: player jumping with racket arm extended overhead.
 class RecordingGuidePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final centerX = size.width / 2;
-    final playerY = size.height * 0.15;
 
-    // Draw the badminton player silhouette (center)
-    _drawPlayer(canvas, centerX, playerY, size.height * 0.65);
+    // Draw the main smash pose (side view) in center
+    _drawSmashPlayer(canvas, centerX, size);
 
-    // Draw phone positions
-    final phoneY = size.height * 0.45;
+    // Camera position indicators
+    final camY = size.height * 0.42;
 
-    // Correct phone (front) - center
-    _drawPhone(canvas, centerX, phoneY - 30, true);
-    _drawLabel(canvas, '정면', centerX, phoneY + 30, Colors.green);
+    // Correct: side view (left side)
+    _drawCameraIcon(canvas, centerX - size.width * 0.38, camY, true);
+    _drawLabel(canvas, '측면', centerX - size.width * 0.38, camY + 32,
+        const Color(0xFF22C55E));
 
-    // Incorrect phone (left diagonal)
-    _drawPhone(canvas, centerX - size.width * 0.32, phoneY, false);
-    _drawLabel(canvas, '대각', centerX - size.width * 0.32, phoneY + 50, Colors.red);
-
-    // Incorrect phone (right diagonal)
-    _drawPhone(canvas, centerX + size.width * 0.32, phoneY, false);
-    _drawLabel(canvas, '대각', centerX + size.width * 0.32, phoneY + 50, Colors.red);
+    // Incorrect: back view (right side)
+    _drawCameraIcon(canvas, centerX + size.width * 0.38, camY, false);
+    _drawLabel(canvas, '후면', centerX + size.width * 0.38, camY + 32,
+        const Color(0xFFEF4444));
   }
 
-  void _drawPlayer(Canvas canvas, double cx, double startY, double height) {
+  void _drawSmashPlayer(Canvas canvas, double cx, Size size) {
     final paint = Paint()
-      ..color = Colors.grey[400]!
+      ..color = const Color(0xFF94A3B8)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.0
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final fillPaint = Paint()
+      ..color = const Color(0xFF94A3B8).withOpacity(0.12)
+      ..style = PaintingStyle.fill;
+
+    final scale = size.height / 300;
+    final startY = size.height * 0.08;
+
+    // --- Side-view smash pose (player facing right, jumping) ---
+
+    // Head
+    final headCx = cx + 2 * scale;
+    final headCy = startY + 38 * scale;
+    canvas.drawCircle(Offset(headCx, headCy), 14 * scale, paint);
+    canvas.drawCircle(Offset(headCx, headCy), 14 * scale, fillPaint);
+
+    // Neck
+    canvas.drawLine(
+      Offset(headCx, headCy + 14 * scale),
+      Offset(cx, startY + 60 * scale),
+      paint,
+    );
+
+    // Torso (slightly arched back for smash)
+    final shoulderPos = Offset(cx, startY + 60 * scale);
+    final hipPos = Offset(cx - 8 * scale, startY + 115 * scale);
+    canvas.drawLine(shoulderPos, hipPos, paint);
+
+    // --- Racket arm (right arm - extended high overhead) ---
+    // Upper arm going up-back
+    final rShoulderX = cx + 5 * scale;
+    final rElbow = Offset(cx + 18 * scale, startY + 32 * scale);
+    canvas.drawLine(
+      Offset(rShoulderX, startY + 60 * scale),
+      rElbow,
+      paint,
+    );
+    // Forearm extending up to racket
+    final rHand = Offset(cx + 28 * scale, startY + 8 * scale);
+    canvas.drawLine(rElbow, rHand, paint);
+
+    // Racket
+    final racketPaint = Paint()
+      ..color = const Color(0xFF64748B)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5
       ..strokeCap = StrokeCap.round;
 
-    final fillPaint = Paint()
-      ..color = Colors.grey[400]!.withOpacity(0.15)
-      ..style = PaintingStyle.fill;
+    // Handle
+    final racketBase = Offset(cx + 32 * scale, startY - 5 * scale);
+    canvas.drawLine(rHand, racketBase, racketPaint);
 
-    final scale = height / 180;
-
-    // Head
-    canvas.drawCircle(Offset(cx, startY + 15 * scale), 12 * scale, paint);
-    canvas.drawCircle(Offset(cx, startY + 15 * scale), 12 * scale, fillPaint);
-
-    // Neck
-    canvas.drawLine(
-      Offset(cx, startY + 27 * scale),
-      Offset(cx, startY + 35 * scale),
-      paint,
-    );
-
-    // Shoulders
-    canvas.drawLine(
-      Offset(cx - 25 * scale, startY + 40 * scale),
-      Offset(cx + 25 * scale, startY + 40 * scale),
-      paint,
-    );
-
-    // Torso
-    canvas.drawLine(
-      Offset(cx, startY + 35 * scale),
-      Offset(cx, startY + 85 * scale),
-      paint,
-    );
-
-    // Left arm (holding racket up)
-    canvas.drawLine(
-      Offset(cx - 25 * scale, startY + 40 * scale),
-      Offset(cx - 30 * scale, startY + 60 * scale),
-      paint,
-    );
-    // Left forearm going up with racket
-    canvas.drawLine(
-      Offset(cx - 30 * scale, startY + 60 * scale),
-      Offset(cx - 15 * scale, startY + 25 * scale),
-      paint,
-    );
-
-    // Racket
-    final racketPaint = Paint()
-      ..color = Colors.grey[500]!
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
-    // Racket handle
-    canvas.drawLine(
-      Offset(cx - 15 * scale, startY + 25 * scale),
-      Offset(cx - 8 * scale, startY + 5 * scale),
-      racketPaint,
-    );
     // Racket head (oval)
     canvas.save();
-    canvas.translate(cx - 5 * scale, startY - 8 * scale);
-    canvas.rotate(-0.3);
+    canvas.translate(racketBase.dx + 3 * scale, racketBase.dy - 12 * scale);
+    canvas.rotate(-0.2);
     canvas.drawOval(
-      Rect.fromCenter(center: Offset.zero, width: 18 * scale, height: 22 * scale),
+      Rect.fromCenter(
+          center: Offset.zero, width: 20 * scale, height: 26 * scale),
       racketPaint,
     );
     canvas.restore();
 
-    // Right arm (relaxed)
+    // --- Left arm (non-racket arm - extended forward for balance) ---
+    final lShoulderX = cx - 5 * scale;
+    final lElbow = Offset(cx + 20 * scale, startY + 72 * scale);
     canvas.drawLine(
-      Offset(cx + 25 * scale, startY + 40 * scale),
-      Offset(cx + 28 * scale, startY + 60 * scale),
+      Offset(lShoulderX, startY + 62 * scale),
+      lElbow,
       paint,
     );
-    canvas.drawLine(
-      Offset(cx + 28 * scale, startY + 60 * scale),
-      Offset(cx + 22 * scale, startY + 75 * scale),
-      paint,
-    );
+    final lHand = Offset(cx + 35 * scale, startY + 65 * scale);
+    canvas.drawLine(lElbow, lHand, paint);
 
-    // Hips
+    // --- Legs (jumping / scissors kick position) ---
+    // Right leg (front, slightly bent forward)
+    final rHip = Offset(hipPos.dx + 6 * scale, hipPos.dy);
+    final rKnee = Offset(cx + 15 * scale, startY + 145 * scale);
+    final rFoot = Offset(cx + 22 * scale, startY + 178 * scale);
+    canvas.drawLine(rHip, rKnee, paint);
+    canvas.drawLine(rKnee, rFoot, paint);
+    // Foot
     canvas.drawLine(
-      Offset(cx - 18 * scale, startY + 85 * scale),
-      Offset(cx + 18 * scale, startY + 85 * scale),
-      paint,
-    );
+        rFoot, Offset(rFoot.dx + 10 * scale, rFoot.dy + 2 * scale), paint);
 
-    // Left leg (slight lunge stance)
+    // Left leg (back, bent behind)
+    final lHip = Offset(hipPos.dx - 4 * scale, hipPos.dy);
+    final lKnee = Offset(cx - 25 * scale, startY + 148 * scale);
+    final lFoot = Offset(cx - 18 * scale, startY + 170 * scale);
+    canvas.drawLine(lHip, lKnee, paint);
+    canvas.drawLine(lKnee, lFoot, paint);
+    // Foot
     canvas.drawLine(
-      Offset(cx - 18 * scale, startY + 85 * scale),
-      Offset(cx - 25 * scale, startY + 120 * scale),
-      paint,
-    );
-    canvas.drawLine(
-      Offset(cx - 25 * scale, startY + 120 * scale),
-      Offset(cx - 28 * scale, startY + 155 * scale),
-      paint,
-    );
+        lFoot, Offset(lFoot.dx - 8 * scale, lFoot.dy + 3 * scale), paint);
 
-    // Right leg
-    canvas.drawLine(
-      Offset(cx + 18 * scale, startY + 85 * scale),
-      Offset(cx + 22 * scale, startY + 120 * scale),
-      paint,
-    );
-    canvas.drawLine(
-      Offset(cx + 22 * scale, startY + 120 * scale),
-      Offset(cx + 20 * scale, startY + 155 * scale),
-      paint,
-    );
+    // --- Shuttlecock (small, above racket) ---
+    _drawShuttlecock(canvas, cx + 36 * scale, startY - 28 * scale, scale);
 
-    // Feet
-    canvas.drawLine(
-      Offset(cx - 28 * scale, startY + 155 * scale),
-      Offset(cx - 38 * scale, startY + 158 * scale),
-      paint,
-    );
-    canvas.drawLine(
-      Offset(cx + 20 * scale, startY + 155 * scale),
-      Offset(cx + 30 * scale, startY + 158 * scale),
-      paint,
-    );
-  }
-
-  void _drawPhone(Canvas canvas, double cx, double cy, bool isCorrect) {
-    final rect = RRect.fromRectAndRadius(
-      Rect.fromCenter(center: Offset(cx, cy), width: 28, height: 48),
-      const Radius.circular(6),
-    );
-
-    // Phone body
-    final borderPaint = Paint()
-      ..color = isCorrect ? Colors.green : Colors.red
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5;
-    final fillPaint = Paint()
-      ..color = (isCorrect ? Colors.green : Colors.red).withOpacity(0.1)
+    // --- Ground shadow (subtle) ---
+    final shadowPaint = Paint()
+      ..color = const Color(0xFF94A3B8).withOpacity(0.15)
       ..style = PaintingStyle.fill;
-
-    canvas.drawRRect(rect, fillPaint);
-    canvas.drawRRect(rect, borderPaint);
-
-    // Check or X mark
-    if (isCorrect) {
-      // Green circle + check
-      canvas.drawCircle(Offset(cx, cy), 10, Paint()..color = Colors.green);
-      final checkPaint = Paint()
-        ..color = Colors.white
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2
-        ..strokeCap = StrokeCap.round;
-      canvas.drawLine(Offset(cx - 4, cy), Offset(cx - 1, cy + 4), checkPaint);
-      canvas.drawLine(Offset(cx - 1, cy + 4), Offset(cx + 5, cy - 3), checkPaint);
-    } else {
-      // Red circle + X
-      canvas.drawCircle(Offset(cx, cy), 10, Paint()..color = Colors.red);
-      final xPaint = Paint()
-        ..color = Colors.white
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2
-        ..strokeCap = StrokeCap.round;
-      canvas.drawLine(Offset(cx - 4, cy - 4), Offset(cx + 4, cy + 4), xPaint);
-      canvas.drawLine(Offset(cx + 4, cy - 4), Offset(cx - 4, cy + 4), xPaint);
-    }
-
-    // Dashed line from phone to player area
-    if (!isCorrect) {
-      final dashPaint = Paint()
-        ..color = Colors.red.withOpacity(0.3)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1;
-      _drawDashedLine(canvas, Offset(cx, cy - 24), Offset(cx + (cx > 200 ? -30 : 30), cy - 50), dashPaint);
-    }
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(cx, startY + 190 * scale),
+        width: 60 * scale,
+        height: 8 * scale,
+      ),
+      shadowPaint,
+    );
   }
 
-  void _drawDashedLine(Canvas canvas, Offset start, Offset end, Paint paint) {
-    final dx = end.dx - start.dx;
-    final dy = end.dy - start.dy;
-    final distance = math.sqrt(dx * dx + dy * dy);
-    final dashLength = 4.0;
-    final gapLength = 3.0;
-    final count = (distance / (dashLength + gapLength)).floor();
+  void _drawShuttlecock(Canvas canvas, double cx, double cy, double scale) {
+    final paint = Paint()
+      ..color = const Color(0xFF64748B)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
 
-    for (int i = 0; i < count; i++) {
-      final startFraction = i * (dashLength + gapLength) / distance;
-      final endFraction = (i * (dashLength + gapLength) + dashLength) / distance;
+    // Cork (small circle)
+    canvas.drawCircle(Offset(cx, cy + 4 * scale), 3 * scale, paint);
+    canvas.drawCircle(
+      Offset(cx, cy + 4 * scale),
+      3 * scale,
+      Paint()
+        ..color = const Color(0xFF64748B).withOpacity(0.3)
+        ..style = PaintingStyle.fill,
+    );
+
+    // Feathers (fan shape going up)
+    for (var i = -2; i <= 2; i++) {
+      final angle = i * 0.25;
       canvas.drawLine(
-        Offset(start.dx + dx * startFraction, start.dy + dy * startFraction),
-        Offset(start.dx + dx * endFraction, start.dy + dy * endFraction),
+        Offset(cx, cy + 1 * scale),
+        Offset(cx + math.sin(angle) * 8 * scale,
+            cy - math.cos(angle) * 10 * scale),
         paint,
       );
     }
   }
 
-  void _drawLabel(Canvas canvas, String text, double cx, double cy, Color color) {
+  void _drawCameraIcon(Canvas canvas, double cx, double cy, bool isCorrect) {
+    final color = isCorrect ? const Color(0xFF22C55E) : const Color(0xFFEF4444);
+
+    // Phone body
+    final rect = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: Offset(cx, cy), width: 30, height: 50),
+      const Radius.circular(6),
+    );
+    canvas.drawRRect(
+        rect,
+        Paint()
+          ..color = color.withOpacity(0.08)
+          ..style = PaintingStyle.fill);
+    canvas.drawRRect(
+        rect,
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.5);
+
+    // Check or X icon
+    if (isCorrect) {
+      canvas.drawCircle(Offset(cx, cy), 10, Paint()..color = color);
+      final p = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.2
+        ..strokeCap = StrokeCap.round;
+      canvas.drawLine(Offset(cx - 4, cy), Offset(cx - 1, cy + 4), p);
+      canvas.drawLine(Offset(cx - 1, cy + 4), Offset(cx + 5, cy - 3), p);
+    } else {
+      canvas.drawCircle(Offset(cx, cy), 10, Paint()..color = color);
+      final p = Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.2
+        ..strokeCap = StrokeCap.round;
+      canvas.drawLine(Offset(cx - 4, cy - 4), Offset(cx + 4, cy + 4), p);
+      canvas.drawLine(Offset(cx + 4, cy - 4), Offset(cx - 4, cy + 4), p);
+    }
+  }
+
+  void _drawLabel(
+      Canvas canvas, String text, double cx, double cy, Color color) {
     final textSpan = TextSpan(
       text: text,
       style: TextStyle(

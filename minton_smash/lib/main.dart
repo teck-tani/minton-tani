@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:camera/camera.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'theme.dart';
 import 'screens/ai_coach_screen.dart';
 import 'screens/analysis_main_screen.dart';
@@ -12,7 +11,6 @@ import 'screens/login_screen.dart';
 import 'widgets/app_drawer.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'providers/auth_provider.dart';
-import 'config/social_auth_config.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -22,9 +20,6 @@ final camerasProvider = Provider<List<CameraDescription>>((ref) => []);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Kakao SDK
-  KakaoSdk.init(nativeAppKey: SocialAuthConfig.kakaoNativeAppKey);
 
   try {
     await Firebase.initializeApp(

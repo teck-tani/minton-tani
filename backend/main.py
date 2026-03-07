@@ -8,6 +8,8 @@ import json
 import uuid
 import tempfile
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import firebase_admin
 from firebase_admin import auth as firebase_auth, credentials, firestore
 from datetime import datetime
@@ -126,9 +128,12 @@ def background_video_processing(video_url: str, user_id: str):
     })
 
     try:
-        # 1. Download video from Firebase Storage URL
+        # 1. Download video from Firebase Storage URL (with retry for SSL errors)
         print(f"Downloading {video_url}...")
-        resp = requests.get(video_url, stream=True, timeout=120)
+        session = requests.Session()
+        retries = Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
+        session.mount("https://", HTTPAdapter(max_retries=retries))
+        resp = session.get(video_url, stream=True, timeout=120)
         resp.raise_for_status()
         tmp_video = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False)
         for chunk in resp.iter_content(chunk_size=8192):
@@ -141,7 +146,7 @@ def background_video_processing(video_url: str, user_id: str):
         annotated_url = None
         mediapipe_biomechanics = {}
         try:
-            annotated_url, mediapipe_biomechanics = annotate_video_with_pose(video_url, user_id, analysis_id)
+            annotated_url, mediapipe_biomechanics = annotate_video_with_pose(local_video_path, user_id, analysis_id)
             print(f"MediaPipe annotation complete: {annotated_url}")
             if mediapipe_biomechanics:
                 print(f"Biomechanics extracted: {list(mediapipe_biomechanics.keys())}")
@@ -421,11 +426,12 @@ async def ai_coach_chat(request: CoachChatRequest):
 구체적인 수치를 인용하면서 개선 방법을 제시해주세요.
 데이터가 없는 경우 일반적인 배드민턴 코칭 조언을 제공하세요."""
 
-    # 5. Call Gemini
+    # 5. Call Gemini (with timeout protection)
     try:
         gemini_response = rag_pipeline.gemini_client.models.generate_content(
             model='gemini-2.5-pro',
             contents=[prompt],
+            config={"http_options": {"timeout": 60000}},
         )
         response_text = gemini_response.text
     except Exception as e:

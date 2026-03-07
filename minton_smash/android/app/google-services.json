@@ -1,29 +1,62 @@
 {
-    "project_info": {
-        "project_number": "120519944306",
-        "project_id": "minton-smash-cv-app",
-        "storage_bucket": "minton-smash-cv-app.firebasestorage.app"
-    },
-    "client": [
-        {
-            "client_info": {
-                "mobilesdk_app_id": "1:120519944306:android:b66b41cd78640a870cbaeb",
-                "android_client_info": {
-                    "package_name": "com.dckwon.minton_smash"
-                }
-            },
-            "oauth_client": [],
-            "api_key": [
-                {
-                    "current_key": "AIzaSyClmumtobWi9BVJgz5smHqTJfpZ0UN-HRw"
-                }
-            ],
-            "services": {
-                "appinvite_service": {
-                    "other_platform_oauth_client": []
-                }
-            }
+  "project_info": {
+    "project_number": "120519944306",
+    "project_id": "minton-smash-cv-app",
+    "storage_bucket": "minton-smash-cv-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120519944306:android:b66b41cd78640a870cbaeb",
+        "android_client_info": {
+          "package_name": "com.dckwon.minton_smash"
         }
-    ],
-    "configuration_version": "1"
+      },
+      "oauth_client": [
+        {
+          "client_id": "120519944306-g2fl004avbkit0oq1l4fsc4jdkg7srq8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dckwon.minton_smash",
+            "certificate_hash": "5c676772a6fcff0e2741ff4760c84e8c16b4c52f"
+          }
+        },
+        {
+          "client_id": "120519944306-skae10rkfilbk78ho1luelg5dafalo9s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dckwon.minton_smash",
+            "certificate_hash": "93480c0298da5332292f944a5fd80b20f40b8b46"
+          }
+        },
+        {
+          "client_id": "120519944306-00a0q1h4uasa6l0uk1kf32f5o4o72uh7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClmumtobWi9BVJgz5smHqTJfpZ0UN-HRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120519944306-00a0q1h4uasa6l0uk1kf32f5o4o72uh7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "120519944306-j939r1mlc2s3e36073n9n5irqoonm819.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dckwon.mintonSmash"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }

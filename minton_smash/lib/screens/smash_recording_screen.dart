@@ -1,15 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
-import 'package:google_mlkit_pose_detection/google_mlkit_pose_detection.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
-import '../widgets/pose_painter.dart';
 import '../services/api_service.dart';
 import '../theme.dart';
 
@@ -26,15 +23,9 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
   static const int _maxRecordingSeconds = 15;
 
   CameraController? _cameraController;
-  final PoseDetector _poseDetector = PoseDetector(
-    options: PoseDetectorOptions(mode: PoseDetectionMode.stream),
-  );
-  bool _isBusy = false;
-  List<Pose> _poses = [];
   int _cameraIndex = 0;
   bool _isRecording = false;
   int _recordingSeconds = 0;
-  bool _showSkeleton = true;
   bool _showGuideOverlay = true;
   int _countdown = 0;
   bool _isUploading = false;
@@ -60,7 +51,6 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
 
   Future<void> _startCamera(int index) async {
     if (_cameraController != null) {
-      try { await _cameraController!.stopImageStream(); } catch (_) {}
       await _cameraController!.dispose();
     }
 
@@ -69,16 +59,12 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
       camera,
       ResolutionPreset.medium,
       enableAudio: true,
-      imageFormatGroup: Platform.isAndroid
-          ? ImageFormatGroup.nv21
-          : ImageFormatGroup.bgra8888,
     );
 
     try {
       await _cameraController!.initialize();
       if (!mounted) return;
       await _cameraController!.lockCaptureOrientation(DeviceOrientation.portraitUp);
-      _cameraController!.startImageStream(_processCameraImage);
       setState(() {});
     } catch (e) {
       debugPrint("Camera initialization error: $e");
@@ -88,7 +74,6 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
   void _switchCamera() async {
     if (widget.cameras.length < 2 || _isRecording) return;
     _cameraIndex = (_cameraIndex + 1) % widget.cameras.length;
-    _poses = [];
     await _startCamera(_cameraIndex);
   }
 
@@ -99,11 +84,7 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
       _showGuideOverlay = false;
     });
 
-    // Stop image stream before recording
     if (_cameraController == null || !mounted) return;
-    try { await _cameraController!.stopImageStream(); } catch (_) {}
-    await Future.delayed(const Duration(milliseconds: 500));
-    if (!mounted) return;
 
     try {
       await _cameraController!.startVideoRecording();
@@ -119,7 +100,6 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
           SnackBar(content: Text('녹화 시작 실패: $e')),
         );
       }
-      try { _cameraController!.startImageStream(_processCameraImage); } catch (_) {}
     }
   }
 
@@ -158,9 +138,7 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
         await _uploadVideo(File(videoFile.path));
       }
 
-      // Restart pose detection stream
-      if (mounted && _cameraController != null) {
-        _cameraController!.startImageStream(_processCameraImage);
+      if (mounted) {
         setState(() => _showGuideOverlay = true);
       }
     } catch (e) {
@@ -261,55 +239,11 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
     });
   }
 
-  Future<void> _processCameraImage(CameraImage image) async {
-    if (_isBusy || !mounted) return;
-    _isBusy = true;
-
-    final camera = widget.cameras[_cameraIndex];
-    final imageRotation =
-        InputImageRotationValue.fromRawValue(camera.sensorOrientation) ??
-            InputImageRotation.rotation0deg;
-
-    final inputImageFormat = Platform.isAndroid
-        ? InputImageFormat.nv21
-        : (InputImageFormatValue.fromRawValue(image.format.raw) ??
-            InputImageFormat.bgra8888);
-
-    final WriteBuffer allBytes = WriteBuffer();
-    for (final Plane plane in image.planes) {
-      allBytes.putUint8List(plane.bytes);
-    }
-    final bytes = allBytes.done().buffer.asUint8List();
-
-    final Size imageSize = Size(image.width.toDouble(), image.height.toDouble());
-
-    final metadata = InputImageMetadata(
-      size: imageSize,
-      rotation: imageRotation,
-      format: inputImageFormat,
-      bytesPerRow: image.planes[0].bytesPerRow,
-    );
-
-    final inputImage = InputImage.fromBytes(bytes: bytes, metadata: metadata);
-
-    try {
-      final poses = await _poseDetector.processImage(inputImage);
-      if (mounted) {
-        setState(() => _poses = poses);
-      }
-    } catch (e) {
-      debugPrint("Error processing pose: $e");
-    }
-
-    _isBusy = false;
-  }
-
   @override
   void dispose() {
     _recordingTimer?.cancel();
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _cameraController?.dispose();
-    _poseDetector.close();
     super.dispose();
   }
 
@@ -333,22 +267,6 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
         children: [
           // Camera preview
           CameraPreview(_cameraController!),
-
-          // Pose overlay (when showing skeleton and not recording)
-          if (_showSkeleton && !_isRecording && _countdown == 0)
-            CustomPaint(
-              painter: PosePainter(
-                _poses,
-                Size(
-                  _cameraController!.value.previewSize!.height,
-                  _cameraController!.value.previewSize!.width,
-                ),
-                InputImageRotationValue.fromRawValue(
-                    widget.cameras[_cameraIndex].sensorOrientation) ??
-                    InputImageRotation.rotation90deg,
-                showAngles: true,
-              ),
-            ),
 
           // Guide overlay (semi-transparent silhouette before recording)
           if (_showGuideOverlay && !_isRecording && _countdown == 0)
@@ -383,37 +301,7 @@ class _SmashRecordingScreenState extends State<SmashRecordingScreen> {
                   icon: const Icon(Symbols.arrow_back, color: Colors.white, size: 28),
                   onPressed: _isRecording ? null : () => Navigator.of(context).pop(),
                 ),
-                // Skeleton toggle
-                if (!_isRecording)
-                  GestureDetector(
-                    onTap: () => setState(() => _showSkeleton = !_showSkeleton),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.black45,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Symbols.skeleton,
-                            color: _showSkeleton ? AppTheme.primaryColor : Colors.white54,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            _showSkeleton ? 'ON' : 'OFF',
-                            style: TextStyle(
-                              color: _showSkeleton ? AppTheme.primaryColor : Colors.white54,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                const SizedBox.shrink(),
               ],
             ),
           ),

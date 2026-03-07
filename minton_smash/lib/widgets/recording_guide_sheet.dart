@@ -61,7 +61,7 @@ class _RecordingGuideContent extends StatelessWidget {
                 children: [
                   // Title
                   Text(
-                    '정면 또는 측면에 맞춰\n촬영해 주세요',
+                    '스매시 자세를 측면에서\n촬영해 주세요',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class _RecordingGuideContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '대각선 또는 뒷모습을 촬영한 영상은\n진단할 수 없어요.',
+                    '후면이나 대각선에서 촬영한 영상은\n진단할 수 없어요.',
                     style: TextStyle(
                       fontSize: 14,
                       color: subColor,

@@ -14,6 +14,8 @@ from statistics import mean
 import cv2
 import mediapipe as mp
 import requests as http_requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 import firebase_admin
 from firebase_admin import storage
 
@@ -300,10 +302,12 @@ def _draw_angle_label(frame, landmarks, w, h, idx1, idx_center, idx3, joint_type
                 font, font_scale, (255, 255, 255), thickness, cv2.LINE_AA)
 
 
-def annotate_video_with_pose(video_url: str, user_id: str, analysis_id: str) -> tuple[str | None, dict]:
+def annotate_video_with_pose(video_source: str, user_id: str, analysis_id: str) -> tuple[str | None, dict]:
     """
-    Download video, run MediaPipe Pose on each frame, draw skeleton,
+    Process video with MediaPipe Pose on each frame, draw skeleton,
     encode as H.264 MP4, upload to Firebase Storage.
+
+    video_source can be a local file path or a remote URL.
 
     Returns (annotated_video_url, biomechanics_data).
     biomechanics_data contains real joint angles extracted from MediaPipe.
@@ -313,16 +317,23 @@ def annotate_video_with_pose(video_url: str, user_id: str, analysis_id: str) -> 
     tmp_h264_output = None
 
     try:
-        # 1. Download video
-        print(f"[MediaPipe] Downloading video: {video_url[:80]}...")
-        resp = http_requests.get(video_url, stream=True, timeout=120)
-        resp.raise_for_status()
+        # 1. Get video file (local path or download from URL)
+        if os.path.isfile(video_source):
+            input_path = video_source
+            print(f"[MediaPipe] Using local video: {input_path}")
+        else:
+            print(f"[MediaPipe] Downloading video: {video_source[:80]}...")
+            session = http_requests.Session()
+            retries = Retry(total=3, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
+            session.mount("https://", HTTPAdapter(max_retries=retries))
+            resp = session.get(video_source, stream=True, timeout=120)
+            resp.raise_for_status()
 
-        tmp_input = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False)
-        for chunk in resp.iter_content(chunk_size=8192):
-            tmp_input.write(chunk)
-        tmp_input.close()
-        input_path = tmp_input.name
+            tmp_input = tempfile.NamedTemporaryFile(suffix=".mp4", delete=False)
+            for chunk in resp.iter_content(chunk_size=8192):
+                tmp_input.write(chunk)
+            tmp_input.close()
+            input_path = tmp_input.name
 
         # 2. Open video
         cap = cv2.VideoCapture(input_path)
@@ -422,8 +433,9 @@ def annotate_video_with_pose(video_url: str, user_id: str, analysis_id: str) -> 
     finally:
         # Cleanup temp files
         for tmp in [tmp_input, tmp_raw_output, tmp_h264_output]:
-            if tmp and os.path.exists(tmp.name):
+            if tmp is not None:
                 try:
-                    os.unlink(tmp.name)
-                except OSError:
+                    if os.path.exists(tmp.name):
+                        os.unlink(tmp.name)
+                except (OSError, AttributeError):
                     pass
